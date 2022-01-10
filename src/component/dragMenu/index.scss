@@ -1,0 +1,29 @@
+.drag_menu {
+  padding: 10px;
+  &_title {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  &_list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    &_column {
+      width: 100px;
+      border-radius: 5px;
+      border: 1px solid #d5d5d5;
+      text-align: center;
+      padding: 5px;
+      box-sizing: border-box;
+      margin-right: 3%;
+      cursor: pointer;
+      transition: box-shadow 0.2s ease-in;
+    }
+    &_column:hover {
+      box-shadow: 2px 2px 2px 2px #f5f5f5;
+    }
+    &_column_active {
+      background: #f5f5f5;
+    }
+  }
+}

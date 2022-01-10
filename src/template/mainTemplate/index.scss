@@ -1,0 +1,17 @@
+.main_template_header {
+  background: #202529;
+  &_title {
+    display: flex;
+    &_image {
+      width: 30px;
+      height: 30px;
+    }
+    &_text {
+      margin-left: 10px;
+      color: #fff;
+    }
+  }
+}
+.main_template_container {
+  height: calc(100vh - 72px);
+}

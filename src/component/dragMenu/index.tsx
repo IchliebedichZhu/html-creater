@@ -1,0 +1,74 @@
+import { ReactNode } from 'react';
+import Icon from '@/component/icon';
+import './index.scss';
+import DragComponent from '../dragger';
+
+type MenuClickFunc = (item: DragMenuListData, index: number) => void;
+
+type DragMenuParam = {
+  title?: string;
+  list: DragMenuListData[];
+  handleClick?: MenuClickFunc;
+  currentIndex?: number;
+};
+
+type DragMenuListParam = {
+  list: DragMenuListData[];
+  handleClick: MenuClickFunc;
+  currentIndex?: number;
+};
+
+/** 菜单栏列表数据 */
+export type DragMenuListData = {
+  key: string;
+  name: string;
+  icon: string | ReactNode;
+};
+
+function MenuList({ list, handleClick, currentIndex }: DragMenuListParam) {
+  return (
+    <>
+      {list.map((val, index) => {
+        const columnClass =
+          currentIndex === index
+            ? 'drag_menu_list_column drag_menu_list_column_active'
+            : 'drag_menu_list_column';
+        return (
+          <div
+            className={columnClass}
+            key={val.key}
+            onClick={() => handleClick(val, index)}
+          >
+            {typeof val.icon === 'string' ? <Icon type={val.icon} /> : val.icon}
+            <p>{val.name}</p>
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+/** 菜单栏 */
+function DragMenu({
+  title = 'Menu List',
+  list,
+  handleClick = () => {},
+  currentIndex = -1,
+}: DragMenuParam) {
+  return (
+    <section className='drag_menu'>
+      <h3 className='drag_menu_title'>{title}</h3>
+      <div className='drag_menu_list'>
+        <DragComponent>
+          <MenuList
+            list={list}
+            handleClick={handleClick}
+            currentIndex={currentIndex}
+          />
+        </DragComponent>
+      </div>
+    </section>
+  );
+}
+
+export default DragMenu;

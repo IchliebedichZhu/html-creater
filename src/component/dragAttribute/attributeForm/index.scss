@@ -1,0 +1,12 @@
+.attr_form_main {
+  .common_attr {
+    display: flex;
+    align-items: center;
+    &_label {
+      margin-right: 10px;
+    }
+    input {
+      width: 300px;
+    }
+  }
+}
