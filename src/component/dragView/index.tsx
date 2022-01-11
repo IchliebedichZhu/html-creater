@@ -1,6 +1,8 @@
 import DragComponent from '../dragger';
 import { Tabs } from 'antd';
 import CodeComponent from './code';
+import ScreenView from './view';
+import './index.scss';
 
 export type TabListData = {
   key: string;
@@ -12,9 +14,9 @@ type TabComponentParam = {
 };
 
 type TabViewParam = {
-  list?: TabListData[];
+  tabMenu?: TabListData[];
   currentKey?: string;
-  onChange?: (key: string) => void;
+  onTabChange?: (key: string) => void;
 };
 
 function HandleTabComponent({ item }: TabComponentParam) {
@@ -22,7 +24,9 @@ function HandleTabComponent({ item }: TabComponentParam) {
     case 'view':
       return (
         <DragComponent>
-          <p>Hello World</p>
+          <div className='screen_view_container'>
+            <ScreenView />
+          </div>
         </DragComponent>
       );
     case 'code':
@@ -33,18 +37,18 @@ function HandleTabComponent({ item }: TabComponentParam) {
 }
 
 function DragView({
-  list = [],
+  tabMenu = [],
   currentKey,
-  onChange = () => {},
+  onTabChange = () => {},
 }: TabViewParam) {
   return (
-    <div>
+    <div className='view_main'>
       <Tabs
         defaultActiveKey={currentKey}
-        onChange={onChange}
+        onChange={onTabChange}
         tabBarStyle={{ padding: '0 10px' }}
       >
-        {list.map((val) => (
+        {tabMenu.map((val) => (
           <Tabs.TabPane key={val.key} tab={val.name}>
             <HandleTabComponent item={val} />
           </Tabs.TabPane>

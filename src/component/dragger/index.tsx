@@ -3,16 +3,7 @@ type DragParams = {
 };
 
 function DragComponent(data: DragParams) {
-  return (
-    <section
-      draggable
-      onDrag={(e) => {
-        console.log(e);
-      }}
-    >
-      {data.children}
-    </section>
-  );
+  return <section draggable>{data.children}</section>;
 }
 
 export default DragComponent;

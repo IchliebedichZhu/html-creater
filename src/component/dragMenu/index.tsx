@@ -1,14 +1,21 @@
-import { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import Icon from '@/component/icon';
 import './index.scss';
-import DragComponent from '../dragger';
 
-type MenuClickFunc = (item: DragMenuListData, index: number) => void;
+type MenuClickFunc = (
+  event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  item: DragMenuListData,
+  index: number
+) => void;
+
+type MoveFunc = (e: MouseEvent) => void;
 
 type DragMenuParam = {
   title?: string;
   list: DragMenuListData[];
   handleClick?: MenuClickFunc;
+  handleMove?: MoveFunc;
+  handleEnd?: MoveFunc;
   currentIndex?: number;
 };
 
@@ -23,6 +30,8 @@ export type DragMenuListData = {
   key: string;
   name: string;
   icon: string | ReactNode;
+  element: (style: React.CSSProperties) => React.FunctionComponentElement<any>;
+  style?: React.CSSProperties;
 };
 
 function MenuList({ list, handleClick, currentIndex }: DragMenuListParam) {
@@ -37,7 +46,7 @@ function MenuList({ list, handleClick, currentIndex }: DragMenuListParam) {
           <div
             className={columnClass}
             key={val.key}
-            onClick={() => handleClick(val, index)}
+            onMouseDown={(e) => handleClick(e, val, index)}
           >
             {typeof val.icon === 'string' ? <Icon type={val.icon} /> : val.icon}
             <p>{val.name}</p>
@@ -53,19 +62,31 @@ function DragMenu({
   title = 'Menu List',
   list,
   handleClick = () => {},
+  handleMove = () => {},
+  handleEnd = () => {},
   currentIndex = -1,
 }: DragMenuParam) {
+  useEffect(() => {
+    window.addEventListener('mousemove', (e) => {
+      e.preventDefault();
+      handleMove(e);
+    });
+    window.addEventListener('mouseup', (e) => {
+      e.preventDefault();
+      handleEnd(e);
+    });
+  }, []);
   return (
     <section className='drag_menu'>
       <h3 className='drag_menu_title'>{title}</h3>
       <div className='drag_menu_list'>
-        <DragComponent>
-          <MenuList
-            list={list}
-            handleClick={handleClick}
-            currentIndex={currentIndex}
-          />
-        </DragComponent>
+        {/* <DragComponent> */}
+        <MenuList
+          list={list}
+          handleClick={handleClick}
+          currentIndex={currentIndex}
+        />
+        {/* </DragComponent> */}
       </div>
     </section>
   );

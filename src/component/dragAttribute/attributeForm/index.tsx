@@ -47,7 +47,7 @@ function AttributeForm({ list }: AttributeFormParam) {
   return (
     <div className='attr_form_main'>
       {list.map((val) => (
-        <HandleComponent item={val} />
+        <HandleComponent item={val} key={val.key} />
       ))}
     </div>
   );
