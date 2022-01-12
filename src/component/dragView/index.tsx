@@ -3,6 +3,10 @@ import { Tabs } from 'antd';
 import CodeComponent from './code';
 import ScreenView from './view';
 import './index.scss';
+import { DragMenuListData } from '../dragMenu';
+import { useAppDispatch, useAppSelector } from '@/hooks/store';
+
+export const viewContainerId = 'view_container';
 
 export type TabListData = {
   key: string;
@@ -11,21 +15,23 @@ export type TabListData = {
 
 type TabComponentParam = {
   item: TabListData;
+  viewList: DragMenuListData[];
 };
 
 type TabViewParam = {
+  viewList?: DragMenuListData[];
   tabMenu?: TabListData[];
   currentKey?: string;
   onTabChange?: (key: string) => void;
 };
 
-function HandleTabComponent({ item }: TabComponentParam) {
+function HandleTabComponent({ item, viewList }: TabComponentParam) {
   switch (item.key) {
-    case 'view':
+    case viewContainerId:
       return (
         <DragComponent>
           <div className='screen_view_container'>
-            <ScreenView />
+            <ScreenView containerId={item.key} viewList={viewList} />
           </div>
         </DragComponent>
       );
@@ -37,6 +43,7 @@ function HandleTabComponent({ item }: TabComponentParam) {
 }
 
 function DragView({
+  viewList = [],
   tabMenu = [],
   currentKey,
   onTabChange = () => {},
@@ -50,7 +57,7 @@ function DragView({
       >
         {tabMenu.map((val) => (
           <Tabs.TabPane key={val.key} tab={val.name}>
-            <HandleTabComponent item={val} />
+            <HandleTabComponent item={val} viewList={viewList} />
           </Tabs.TabPane>
         ))}
       </Tabs>

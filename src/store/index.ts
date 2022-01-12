@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import commonSlice from './common';
+import dragSlice from './drag';
 
 const store = configureStore({
   reducer: {
     common: commonSlice.reducer,
+    drag: dragSlice.reducer,
   },
 });
 

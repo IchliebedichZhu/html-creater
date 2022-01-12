@@ -3,12 +3,16 @@ import DragMenu, { DragMenuListData } from '@/component/dragMenu';
 import DragAttribute from '@/component/dragAttribute';
 import { Col, Row } from 'antd';
 import './index.scss';
-import DragView, { TabListData } from '@/component/dragView';
-import ReactDOM from 'react-dom';
-import { useMemo, useEffect, useState, useCallback } from 'react';
+import DragView, { TabListData, viewContainerId } from '@/component/dragView';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  handleMenuClick,
+  handleMouseMove,
+  handleMouseUp,
+  InitTempBox,
+} from './methods';
 
-const MOVE_CHILD_ID = 'move_child';
-let tmpNode: HTMLDivElement | undefined;
+let currentElement: DragMenuListData;
 
 const menuList: DragMenuListData[] = [
   {
@@ -23,10 +27,9 @@ const menuList: DragMenuListData[] = [
     element: (style) => <div style={style}>form</div>,
   },
 ];
-
-const viewList: TabListData[] = [
+const tabList: TabListData[] = [
   {
-    key: 'view',
+    key: viewContainerId,
     name: 'View',
   },
   {
@@ -35,46 +38,10 @@ const viewList: TabListData[] = [
   },
 ];
 
-function handleMenuClick(
-  e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  item?: DragMenuListData
-) {
-  const node = document.querySelector<HTMLDivElement>(`#${MOVE_CHILD_ID}`);
-  if (node && item) {
-    tmpNode = node;
-    node.style.display = 'block';
-
-    node.style.transform = `translate3d(${e.pageX}px, ${e.pageY}px, 0)`;
-    ReactDOM.render(item.element(item.style || {}), node);
-  }
-}
-
-function handleMouseMove(e: MouseEvent, node?: HTMLDivElement) {
-  if (node) {
-    let pageX = e.pageX,
-      pageY = e.pageY;
-
-    node.style.transform = `translate3d(${pageX}px, ${pageY}px, 0)`;
-  }
-}
-
-function handleMouseUp(e: MouseEvent, node?: HTMLDivElement) {
-  if (node) {
-    ReactDOM.unmountComponentAtNode(node);
-    tmpNode = undefined;
-  }
-}
-
 function Main() {
-  const [currentElement, setCurrentElement] = useState<DragMenuListData>();
+  const [viewList, setViewList] = useState<DragMenuListData[]>([]);
   useEffect(() => {
-    const tmpChild = document.createElement('div');
-    tmpChild.id = MOVE_CHILD_ID;
-    tmpChild.style.position = 'fixed';
-    tmpChild.style.top = '0';
-    tmpChild.style.left = '0';
-    tmpChild.style.display = 'none';
-    document.body.appendChild(tmpChild);
+    InitTempBox();
   }, []);
   return (
     <MainTemplate>
@@ -83,15 +50,22 @@ function Main() {
           <DragMenu
             list={menuList}
             handleClick={(e, item) => {
-              setCurrentElement(item);
+              currentElement = item;
               handleMenuClick(e, item);
             }}
-            handleMove={(e) => handleMouseMove(e, tmpNode)}
-            handleEnd={(e) => handleMouseUp(e, tmpNode)}
+            handleMove={(e) => handleMouseMove(e)}
+            handleEnd={(e) => {
+              const isInsert = handleMouseUp(e, viewContainerId);
+              if (isInsert && currentElement) {
+                viewList.push(currentElement);
+
+                setViewList([...viewList]);
+              }
+            }}
           />
         </Col>
         <Col className='draw_view_main' span={12}>
-          <DragView tabMenu={viewList} />
+          <DragView tabMenu={tabList} viewList={viewList} />
         </Col>
         <Col span={6}>
           <DragAttribute />
