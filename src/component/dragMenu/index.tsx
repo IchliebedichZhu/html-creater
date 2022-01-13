@@ -8,14 +8,10 @@ type MenuClickFunc = (
   index: number
 ) => void;
 
-type MoveFunc = (e: MouseEvent) => void;
-
 type DragMenuParam = {
   title?: string;
   list: DragMenuListData[];
   handleClick?: MenuClickFunc;
-  handleMove?: MoveFunc;
-  handleEnd?: MoveFunc;
   currentIndex?: number;
 };
 
@@ -62,20 +58,8 @@ function DragMenu({
   title = 'Menu List',
   list,
   handleClick = () => {},
-  handleMove = () => {},
-  handleEnd = () => {},
   currentIndex = -1,
 }: DragMenuParam) {
-  useEffect(() => {
-    window.addEventListener('mousemove', (e) => {
-      e.preventDefault();
-      handleMove(e);
-    });
-    window.addEventListener('mouseup', (e) => {
-      e.preventDefault();
-      handleEnd(e);
-    });
-  }, []);
   return (
     <section className='drag_menu'>
       <h3 className='drag_menu_title'>{title}</h3>

@@ -11,8 +11,10 @@ import {
   handleMouseUp,
   InitTempBox,
 } from './methods';
+import { useMouseMove, useMouseUp } from '@/hooks/mouseEvent';
 
 let currentElement: DragMenuListData;
+let containViewList: DragMenuListData[] = [];
 
 const menuList: DragMenuListData[] = [
   {
@@ -39,9 +41,17 @@ const tabList: TabListData[] = [
 ];
 
 function Main() {
-  const [viewList, setViewList] = useState<DragMenuListData[]>([]);
+  let [viewList, setViewList] = useState<DragMenuListData[]>([]);
   useEffect(() => {
     InitTempBox();
+    useMouseMove(handleMouseMove);
+    useMouseUp((e) => {
+      const isInsert = handleMouseUp(e, viewContainerId);
+      if (isInsert && currentElement) {
+        containViewList.push(currentElement);
+        setViewList([...containViewList]);
+      }
+    });
   }, []);
   return (
     <MainTemplate>
@@ -53,19 +63,19 @@ function Main() {
               currentElement = item;
               handleMenuClick(e, item);
             }}
-            handleMove={(e) => handleMouseMove(e)}
-            handleEnd={(e) => {
-              const isInsert = handleMouseUp(e, viewContainerId);
-              if (isInsert && currentElement) {
-                viewList.push(currentElement);
-
-                setViewList([...viewList]);
-              }
-            }}
           />
         </Col>
         <Col className='draw_view_main' span={12}>
-          <DragView tabMenu={tabList} viewList={viewList} />
+          <DragView
+            tabMenu={tabList}
+            viewList={viewList}
+            handleClick={(e, item, index) => {
+              currentElement = item;
+              handleMenuClick(e, item);
+              containViewList.splice(index, 1);
+              setViewList([...containViewList]);
+            }}
+          />
         </Col>
         <Col span={6}>
           <DragAttribute />

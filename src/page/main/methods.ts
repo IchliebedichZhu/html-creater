@@ -51,7 +51,7 @@ export function handleMouseUp(e: MouseEvent, containerId: string) {
     const { pageX, pageY } = e;
     const containerMaxWidth = offsetLeft + clientWidth;
     const containerMaxHeight = offsetTop + clientHeight;
-
+    // 判断是否在容器内
     if (
       pageX > offsetLeft &&
       pageX < containerMaxWidth &&

@@ -1,10 +1,8 @@
-import DragComponent from '../dragger';
 import { Tabs } from 'antd';
 import CodeComponent from './code';
-import ScreenView from './view';
+import ScreenView, { handleViewItemFunc } from './view';
 import './index.scss';
 import { DragMenuListData } from '../dragMenu';
-import { useAppDispatch, useAppSelector } from '@/hooks/store';
 
 export const viewContainerId = 'view_container';
 
@@ -16,6 +14,7 @@ export type TabListData = {
 type TabComponentParam = {
   item: TabListData;
   viewList: DragMenuListData[];
+  handleClick?: handleViewItemFunc;
 };
 
 type TabViewParam = {
@@ -23,17 +22,24 @@ type TabViewParam = {
   tabMenu?: TabListData[];
   currentKey?: string;
   onTabChange?: (key: string) => void;
+  handleClick?: handleViewItemFunc;
 };
 
-function HandleTabComponent({ item, viewList }: TabComponentParam) {
+function HandleTabComponent({
+  item,
+  viewList,
+  handleClick,
+}: TabComponentParam) {
   switch (item.key) {
     case viewContainerId:
       return (
-        <DragComponent>
-          <div className='screen_view_container'>
-            <ScreenView containerId={item.key} viewList={viewList} />
-          </div>
-        </DragComponent>
+        <div className='screen_view_container'>
+          <ScreenView
+            containerId={item.key}
+            viewList={viewList}
+            handleClick={handleClick}
+          />
+        </div>
       );
     case 'code':
       return <CodeComponent code='<p>hello world</p>' />;
@@ -47,6 +53,7 @@ function DragView({
   tabMenu = [],
   currentKey,
   onTabChange = () => {},
+  handleClick = () => {},
 }: TabViewParam) {
   return (
     <div className='view_main'>
@@ -57,7 +64,11 @@ function DragView({
       >
         {tabMenu.map((val) => (
           <Tabs.TabPane key={val.key} tab={val.name}>
-            <HandleTabComponent item={val} viewList={viewList} />
+            <HandleTabComponent
+              item={val}
+              viewList={viewList}
+              handleClick={handleClick}
+            />
           </Tabs.TabPane>
         ))}
       </Tabs>
