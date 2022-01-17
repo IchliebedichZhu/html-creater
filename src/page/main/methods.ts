@@ -31,12 +31,20 @@ export function handleMenuClick(
   }
 }
 
-export function handleMouseMove(e: MouseEvent) {
+export function handleMouseMove(e: MouseEvent, viewList: DragMenuListData[]) {
   if (tmpNode) {
     let pageX = e.pageX,
       pageY = e.pageY;
 
     tmpNode.style.transform = `translate3d(${pageX}px, ${pageY}px, 0)`;
+    for (let x = 0; x < viewList.length; x++) {
+      // @ts-ignore
+      if (viewList[x].position && pageY > viewList[x].position.y) {
+        return x;
+      }
+    }
+
+    return -1;
   }
 }
 

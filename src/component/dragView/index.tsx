@@ -1,8 +1,8 @@
 import { Tabs } from 'antd';
 import CodeComponent from './code';
-import ScreenView, { handleViewItemFunc } from './view';
-import './index.scss';
+import ScreenView, { HandleViewChangeFunc, handleViewItemFunc } from './view';
 import { DragMenuListData } from '../dragMenu';
+import './index.scss';
 
 export const viewContainerId = 'view_container';
 
@@ -15,6 +15,7 @@ type TabComponentParam = {
   item: TabListData;
   viewList: DragMenuListData[];
   handleClick?: handleViewItemFunc;
+  handleViewChange?: HandleViewChangeFunc;
 };
 
 type TabViewParam = {
@@ -23,12 +24,14 @@ type TabViewParam = {
   currentKey?: string;
   onTabChange?: (key: string) => void;
   handleClick?: handleViewItemFunc;
+  handleViewChange?: HandleViewChangeFunc;
 };
 
 function HandleTabComponent({
   item,
   viewList,
   handleClick,
+  handleViewChange,
 }: TabComponentParam) {
   switch (item.key) {
     case viewContainerId:
@@ -38,6 +41,7 @@ function HandleTabComponent({
             containerId={item.key}
             viewList={viewList}
             handleClick={handleClick}
+            handleGetList={handleViewChange}
           />
         </div>
       );
@@ -54,6 +58,7 @@ function DragView({
   currentKey,
   onTabChange = () => {},
   handleClick = () => {},
+  handleViewChange = () => {},
 }: TabViewParam) {
   return (
     <div className='view_main'>
@@ -68,6 +73,7 @@ function DragView({
               item={val}
               viewList={viewList}
               handleClick={handleClick}
+              handleViewChange={handleViewChange}
             />
           </Tabs.TabPane>
         ))}

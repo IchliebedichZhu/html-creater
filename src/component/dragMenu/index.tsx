@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect } from 'react';
 import Icon from '@/component/icon';
 import './index.scss';
+import { ViewListPositionData } from '../dragView/view';
 
 type MenuClickFunc = (
   event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -28,6 +29,7 @@ export type DragMenuListData = {
   icon: string | ReactNode;
   element: (style: React.CSSProperties) => React.FunctionComponentElement<any>;
   style?: React.CSSProperties;
+  position?: ViewListPositionData;
 };
 
 function MenuList({ list, handleClick, currentIndex }: DragMenuListParam) {
@@ -64,13 +66,11 @@ function DragMenu({
     <section className='drag_menu'>
       <h3 className='drag_menu_title'>{title}</h3>
       <div className='drag_menu_list'>
-        {/* <DragComponent> */}
         <MenuList
           list={list}
           handleClick={handleClick}
           currentIndex={currentIndex}
         />
-        {/* </DragComponent> */}
       </div>
     </section>
   );

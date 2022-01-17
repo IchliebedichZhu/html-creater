@@ -13,6 +13,7 @@ import {
 } from './methods';
 import { useMouseMove, useMouseUp } from '@/hooks/mouseEvent';
 
+let currentIndex = -1;
 let currentElement: DragMenuListData;
 let containViewList: DragMenuListData[] = [];
 
@@ -27,6 +28,17 @@ const menuList: DragMenuListData[] = [
       height: 150,
     },
     element: (style) => <div style={style}>form</div>,
+  },
+  {
+    key: 'box',
+    name: 'box',
+    icon: 'form',
+    style: {
+      background: '#fff',
+      width: 300,
+      height: 150,
+    },
+    element: (style) => <div style={style}>box</div>,
   },
 ];
 const tabList: TabListData[] = [
@@ -44,10 +56,22 @@ function Main() {
   let [viewList, setViewList] = useState<DragMenuListData[]>([]);
   useEffect(() => {
     InitTempBox();
-    useMouseMove(handleMouseMove);
+    useMouseMove((e) => {
+      const insertIndex = handleMouseMove(e, containViewList);
+      console.log(insertIndex);
+
+      if (insertIndex && insertIndex >= 0) {
+        const tmp = containViewList[insertIndex];
+        containViewList.splice(insertIndex, 1, currentElement, tmp);
+        currentIndex = insertIndex;
+        setViewList([...containViewList]);
+      } else {
+        currentIndex = -1;
+      }
+    });
     useMouseUp((e) => {
       const isInsert = handleMouseUp(e, viewContainerId);
-      if (isInsert && currentElement) {
+      if (isInsert && currentElement && currentIndex === -1) {
         containViewList.push(currentElement);
         setViewList([...containViewList]);
       }
@@ -74,6 +98,14 @@ function Main() {
               handleMenuClick(e, item);
               containViewList.splice(index, 1);
               setViewList([...containViewList]);
+            }}
+            handleViewChange={(positionList) => {
+              if (positionList && positionList.length) {
+                positionList.reverse().forEach((val, index) => {
+                  containViewList[index].position = val;
+                });
+              }
+              setViewList(containViewList);
             }}
           />
         </Col>

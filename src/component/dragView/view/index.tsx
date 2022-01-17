@@ -1,4 +1,5 @@
 import { DragMenuListData } from '@/component/dragMenu';
+import { useEffect, useState } from 'react';
 import './index.scss';
 
 type ScreenViewParam = {
@@ -7,6 +8,14 @@ type ScreenViewParam = {
   height?: number;
   viewList?: DragMenuListData[];
   handleClick?: handleViewItemFunc;
+  handleGetList?: (data: ViewListPositionData[]) => void;
+};
+
+export type HandleViewChangeFunc = (data: ViewListPositionData[]) => void;
+
+export type ViewListPositionData = {
+  x: number;
+  y: number;
 };
 
 export type handleViewItemFunc = (
@@ -21,7 +30,23 @@ function ScreenView({
   height = 667,
   viewList,
   handleClick = () => {},
+  handleGetList = () => {},
 }: ScreenViewParam) {
+  const [isDrag, setIsDrag] = useState(false);
+  useEffect(() => {
+    const positionArr: ViewListPositionData[] = [];
+    const parent = document.querySelector(`#${containerId}`);
+    if (parent && parent.childNodes && parent.childNodes.length > 0) {
+      parent.childNodes.forEach((val) => {
+        const boundingClientRect = (val as HTMLElement).getBoundingClientRect();
+        const top = boundingClientRect.top;
+        const left = boundingClientRect.left;
+        positionArr.push({ x: left, y: top });
+
+        handleGetList(positionArr);
+      });
+    }
+  }, [viewList]);
   return (
     <section
       id={containerId}
@@ -34,7 +59,12 @@ function ScreenView({
           key={`${val.key}_${index}`}
           onMouseDown={(e) => {
             e.preventDefault();
+            setIsDrag(true);
             handleClick(e, val, index);
+          }}
+          onMouseUp={(e) => {
+            e.preventDefault();
+            setIsDrag(false);
           }}
         >
           {val.element(val.style || {})}
