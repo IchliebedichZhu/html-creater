@@ -6,16 +6,22 @@ import './index.scss';
 import DragView, { TabListData, viewContainerId } from '@/component/dragView';
 import { useEffect, useMemo, useState } from 'react';
 import {
+  checkIsInContainer,
   handleMenuClick,
   handleMouseMove,
   handleMouseUp,
   InitTempBox,
 } from './methods';
 import { useMouseMove, useMouseUp } from '@/hooks/mouseEvent';
+import { deepClone } from '@/utils';
+import { ViewListPositionData } from '@/component/dragView/view';
 
 let currentIndex = -1;
 let currentElement: DragMenuListData;
 let containViewList: DragMenuListData[] = [];
+let containerPosition: ViewListPositionData[] = [];
+let isSetting = false;
+let isInsert = false;
 
 const menuList: DragMenuListData[] = [
   {
@@ -57,24 +63,47 @@ function Main() {
   useEffect(() => {
     InitTempBox();
     useMouseMove((e) => {
-      const insertIndex = handleMouseMove(e, containViewList);
-      console.log(insertIndex);
+      const insertIndex = handleMouseMove(e, containerPosition);
+      console.log(currentIndex, insertIndex, isInsert, isSetting);
+      if (isSetting) return;
+      if (!checkIsInContainer(e, viewContainerId)) return;
 
-      if (insertIndex && insertIndex >= 0) {
-        const tmp = containViewList[insertIndex];
-        containViewList.splice(insertIndex, 1, currentElement, tmp);
+      if (insertIndex != undefined && insertIndex >= 0) {
+        const oldElement = containViewList[insertIndex];
+        console.log(oldElement);
+        if (currentIndex === insertIndex && !isInsert) return;
+        else if (currentIndex !== -1) {
+          containViewList.splice(currentIndex, 1);
+        }
+
+        containViewList.splice(
+          insertIndex,
+          1,
+          deepClone(currentElement),
+          oldElement
+        );
+
         currentIndex = insertIndex;
         setViewList([...containViewList]);
-      } else {
-        currentIndex = -1;
+        isInsert = false;
+      } else if (containViewList.length === 0) {
+        if (currentElement) {
+          containViewList.push(deepClone(currentElement));
+          setViewList([...containViewList]);
+          isSetting = true;
+          currentIndex = 0;
+        }
       }
     });
     useMouseUp((e) => {
-      const isInsert = handleMouseUp(e, viewContainerId);
-      if (isInsert && currentElement && currentIndex === -1) {
-        containViewList.push(currentElement);
-        setViewList([...containViewList]);
-      }
+      handleMouseUp();
+      isInsert = false;
+      isSetting = false;
+      // currentIndex = -1;
+      // if (isInsert && currentElement && currentIndex === -1) {
+      //   containViewList.push({ ...currentElement });
+      //   setViewList([...containViewList]);
+      // }
     });
   }, []);
   return (
@@ -86,6 +115,7 @@ function Main() {
             handleClick={(e, item) => {
               currentElement = item;
               handleMenuClick(e, item);
+              isInsert = true;
             }}
           />
         </Col>
@@ -101,9 +131,13 @@ function Main() {
             }}
             handleViewChange={(positionList) => {
               if (positionList && positionList.length) {
-                positionList.reverse().forEach((val, index) => {
+                containerPosition = positionList;
+                positionList.forEach((val, index) => {
                   containViewList[index].position = val;
                 });
+              }
+              if (positionList.length > 1) {
+                isSetting = false;
               }
               setViewList(containViewList);
             }}

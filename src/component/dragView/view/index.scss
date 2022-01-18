@@ -1,3 +1,8 @@
 .screen_view {
   background: #f1f1f1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.screen_view::-webkit-scrollbar {
+  width: 0;
 }

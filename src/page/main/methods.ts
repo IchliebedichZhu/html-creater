@@ -1,4 +1,5 @@
 import { DragMenuListData } from '@/component/dragMenu';
+import { ViewListPositionData } from '@/component/dragView/view';
 import ReactDOM from 'react-dom';
 
 export const MOVE_CHILD_ID = 'move_child';
@@ -31,25 +32,27 @@ export function handleMenuClick(
   }
 }
 
-export function handleMouseMove(e: MouseEvent, viewList: DragMenuListData[]) {
+export function handleMouseMove(
+  e: MouseEvent,
+  viewList: ViewListPositionData[]
+) {
   if (tmpNode) {
     let pageX = e.pageX,
       pageY = e.pageY;
 
     tmpNode.style.transform = `translate3d(${pageX}px, ${pageY}px, 0)`;
-    for (let x = 0; x < viewList.length; x++) {
-      // @ts-ignore
-      if (viewList[x].position && pageY > viewList[x].position.y) {
+    for (let x = viewList.length - 1; x >= 0; x--) {
+      if (pageY > viewList[x].y) {
         return x;
       }
     }
 
-    return -1;
+    return viewList.length > 1 ? 0 : -1;
   }
 }
 
-// 鼠标松开事件
-export function handleMouseUp(e: MouseEvent, containerId: string) {
+/** 判断是移动位置是否在容器内 */
+export function checkIsInContainer(e: MouseEvent, containerId: string) {
   const container = document.querySelector<HTMLDivElement>(`#${containerId}`);
   let isInsert = false;
   if (tmpNode && container) {
@@ -68,9 +71,14 @@ export function handleMouseUp(e: MouseEvent, containerId: string) {
     ) {
       isInsert = true;
     }
+  }
+  return isInsert;
+}
 
+// 鼠标松开事件
+export function handleMouseUp() {
+  if (tmpNode) {
     ReactDOM.unmountComponentAtNode(tmpNode);
     tmpNode = undefined;
-    return isInsert;
   }
 }
