@@ -6,7 +6,7 @@ export const MOVE_CHILD_ID = 'move_child';
 
 let tmpNode: HTMLDivElement | undefined;
 
-/** 定义一个临时箱子，用户装载拖动模块 */
+/** 定义一个临时箱子，用与装载拖动模块 */
 export function InitTempBox() {
   const tmpChild = document.createElement('div');
   tmpChild.id = MOVE_CHILD_ID;
@@ -17,7 +17,7 @@ export function InitTempBox() {
   document.body.appendChild(tmpChild);
 }
 
-// 菜单点击事件
+/** 菜单点击事件 */
 export function handleMenuClick(
   e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   item?: DragMenuListData
@@ -32,6 +32,7 @@ export function handleMenuClick(
   }
 }
 
+/** 鼠标移动事件 */
 export function handleMouseMove(
   e: MouseEvent,
   viewList: ViewListPositionData[]

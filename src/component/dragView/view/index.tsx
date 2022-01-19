@@ -41,10 +41,9 @@ function ScreenView({
         const boundingClientRect = (val as HTMLElement).getBoundingClientRect();
         const top = boundingClientRect.top;
         const left = boundingClientRect.left;
-        positionArr.push({ x: left, y: top });
-
-        handleGetList(positionArr);
+        positionArr.push({ x: left, y: top + boundingClientRect.height });
       });
+      handleGetList(positionArr);
     }
   }, [viewList]);
   return (

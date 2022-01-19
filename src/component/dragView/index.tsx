@@ -22,8 +22,11 @@ type TabViewParam = {
   viewList?: DragMenuListData[];
   tabMenu?: TabListData[];
   currentKey?: string;
+  /** 菜单改变事件 */
   onTabChange?: (key: string) => void;
+  /** 点击视图层事件 */
   handleClick?: handleViewItemFunc;
+  /** 视图渲染完成回调 */
   handleViewChange?: HandleViewChangeFunc;
 };
 

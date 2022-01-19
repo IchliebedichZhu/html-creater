@@ -10,6 +10,7 @@ export type AttributeFormList = {
   type: TypeKey;
   label: string;
   extraData: Record<string, any>;
+  value: any;
   handleChange?: changeFunc;
 };
 

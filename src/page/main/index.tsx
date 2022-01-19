@@ -3,8 +3,8 @@ import DragMenu, { DragMenuListData } from '@/component/dragMenu';
 import DragAttribute from '@/component/dragAttribute';
 import { Col, Row } from 'antd';
 import './index.scss';
-import DragView, { TabListData, viewContainerId } from '@/component/dragView';
-import { useEffect, useMemo, useState } from 'react';
+import DragView, { viewContainerId } from '@/component/dragView';
+import { useEffect, useState } from 'react';
 import {
   checkIsInContainer,
   handleMenuClick,
@@ -15,95 +15,29 @@ import {
 import { useMouseMove, useMouseUp } from '@/hooks/mouseEvent';
 import { deepClone } from '@/utils';
 import { ViewListPositionData } from '@/component/dragView/view';
-
-let currentIndex = -1;
-let currentElement: DragMenuListData;
-let containViewList: DragMenuListData[] = [];
-let containerPosition: ViewListPositionData[] = [];
-let isSetting = false;
-let isInsert = false;
-
-const menuList: DragMenuListData[] = [
-  {
-    key: 'form',
-    name: 'form',
-    icon: 'form',
-    style: {
-      background: '#fff',
-      width: 300,
-      height: 150,
-    },
-    element: (style) => <div style={style}>form</div>,
-  },
-  {
-    key: 'box',
-    name: 'box',
-    icon: 'form',
-    style: {
-      background: '#fff',
-      width: 300,
-      height: 150,
-    },
-    element: (style) => <div style={style}>box</div>,
-  },
-];
-const tabList: TabListData[] = [
-  {
-    key: viewContainerId,
-    name: 'View',
-  },
-  {
-    key: 'code',
-    name: 'Code',
-  },
-];
+import { MENU_LIST, VIEW_MENU_TAB_LIST } from '@/data/menu';
+import { useDragMethod } from '@/hooks/drag';
 
 function Main() {
   let [viewList, setViewList] = useState<DragMenuListData[]>([]);
+  const {
+    handleDragMove,
+    handleDragUp,
+    handleViewClick,
+    handleViewRender,
+    getContainerPostion,
+  } = useDragMethod();
   useEffect(() => {
     InitTempBox();
     useMouseMove((e) => {
-      const insertIndex = handleMouseMove(e, containerPosition);
-      console.log(currentIndex, insertIndex, isInsert, isSetting);
-      if (isSetting) return;
-      if (!checkIsInContainer(e, viewContainerId)) return;
-
-      if (insertIndex != undefined && insertIndex >= 0) {
-        const oldElement = containViewList[insertIndex];
-        console.log(oldElement);
-        if (currentIndex === insertIndex && !isInsert) return;
-        else if (currentIndex !== -1) {
-          containViewList.splice(currentIndex, 1);
-        }
-
-        containViewList.splice(
-          insertIndex,
-          1,
-          deepClone(currentElement),
-          oldElement
-        );
-
-        currentIndex = insertIndex;
-        setViewList([...containViewList]);
-        isInsert = false;
-      } else if (containViewList.length === 0) {
-        if (currentElement) {
-          containViewList.push(deepClone(currentElement));
-          setViewList([...containViewList]);
-          isSetting = true;
-          currentIndex = 0;
-        }
-      }
+      // 获取当前鼠标移动到的位置
+      const insertIndex = handleMouseMove(e, getContainerPostion());
+      const containViewList = handleDragMove(e, insertIndex);
+      if (containViewList) setViewList([...containViewList]);
     });
-    useMouseUp((e) => {
+    useMouseUp(() => {
       handleMouseUp();
-      isInsert = false;
-      isSetting = false;
-      // currentIndex = -1;
-      // if (isInsert && currentElement && currentIndex === -1) {
-      //   containViewList.push({ ...currentElement });
-      //   setViewList([...containViewList]);
-      // }
+      handleDragUp();
     });
   }, []);
   return (
@@ -111,34 +45,23 @@ function Main() {
       <Row className='main_row'>
         <Col span={6}>
           <DragMenu
-            list={menuList}
+            list={MENU_LIST}
             handleClick={(e, item) => {
-              currentElement = item;
               handleMenuClick(e, item);
-              isInsert = true;
+              handleViewClick(item, -1, true);
             }}
           />
         </Col>
         <Col className='draw_view_main' span={12}>
           <DragView
-            tabMenu={tabList}
+            tabMenu={VIEW_MENU_TAB_LIST}
             viewList={viewList}
             handleClick={(e, item, index) => {
-              currentElement = item;
               handleMenuClick(e, item);
-              containViewList.splice(index, 1);
-              setViewList([...containViewList]);
+              handleViewClick(item, index, false);
             }}
             handleViewChange={(positionList) => {
-              if (positionList && positionList.length) {
-                containerPosition = positionList;
-                positionList.forEach((val, index) => {
-                  containViewList[index].position = val;
-                });
-              }
-              if (positionList.length > 1) {
-                isSetting = false;
-              }
+              const containViewList = handleViewRender(positionList);
               setViewList(containViewList);
             }}
           />
