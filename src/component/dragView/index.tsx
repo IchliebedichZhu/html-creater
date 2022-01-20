@@ -14,8 +14,10 @@ export type TabListData = {
 type TabComponentParam = {
   item: TabListData;
   viewList: DragMenuListData[];
+  focusIndex: number;
   handleClick?: handleViewItemFunc;
   handleViewChange?: HandleViewChangeFunc;
+  handleClickScreen?: () => void;
 };
 
 type TabViewParam = {
@@ -28,13 +30,19 @@ type TabViewParam = {
   handleClick?: handleViewItemFunc;
   /** 视图渲染完成回调 */
   handleViewChange?: HandleViewChangeFunc;
+  /** 点击容器触发事件 */
+  handleClickScreen?: () => void;
+  /** 当前选中的组件索引值 */
+  focusIndex?: number;
 };
 
 function HandleTabComponent({
   item,
   viewList,
+  focusIndex,
   handleClick,
   handleViewChange,
+  handleClickScreen,
 }: TabComponentParam) {
   switch (item.key) {
     case viewContainerId:
@@ -43,8 +51,10 @@ function HandleTabComponent({
           <ScreenView
             containerId={item.key}
             viewList={viewList}
+            focusIndex={focusIndex}
             handleClick={handleClick}
             handleGetList={handleViewChange}
+            handleClickScreen={handleClickScreen}
           />
         </div>
       );
@@ -62,6 +72,8 @@ function DragView({
   onTabChange = () => {},
   handleClick = () => {},
   handleViewChange = () => {},
+  handleClickScreen = () => {},
+  focusIndex = -1,
 }: TabViewParam) {
   return (
     <div className='view_main'>
@@ -74,9 +86,11 @@ function DragView({
           <Tabs.TabPane key={val.key} tab={val.name}>
             <HandleTabComponent
               item={val}
+              focusIndex={focusIndex}
               viewList={viewList}
               handleClick={handleClick}
               handleViewChange={handleViewChange}
+              handleClickScreen={handleClickScreen}
             />
           </Tabs.TabPane>
         ))}

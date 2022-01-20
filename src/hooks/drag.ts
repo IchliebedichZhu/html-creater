@@ -1,10 +1,6 @@
 import { DragMenuListData } from '@/component/dragMenu';
 import { viewContainerId } from '@/component/dragView';
-import {
-  HandleViewChangeFunc,
-  handleViewItemFunc,
-  ViewListPositionData,
-} from '@/component/dragView/view';
+import { ViewListPositionData } from '@/component/dragView/view';
 import { checkIsInContainer } from '@/page/main/methods';
 import { deepClone } from '@/utils';
 
@@ -77,10 +73,11 @@ export function useDragMethod() {
     item: DragMenuListData,
     index: number,
     isInsert: boolean = false
-  ) {
+  ): [DragMenuListData, number] {
     currentElement = item;
     currentIndex = index;
     isInsert = isInsert;
+    return [currentElement, currentIndex];
   };
 
   /** 视图渲染完成事件 */
@@ -99,8 +96,19 @@ export function useDragMethod() {
     return containViewList;
   };
 
+  /** 获取容器位置信息 */
   const getContainerPostion = () => {
     return containerPosition;
+  };
+
+  /** 获取当前索引值 */
+  const getCurrentIndex = () => {
+    return currentIndex;
+  };
+
+  /** 设置当前索引值 */
+  const setCurrentIndex = (index: number) => {
+    currentIndex = index;
   };
 
   return {
@@ -109,5 +117,7 @@ export function useDragMethod() {
     handleViewClick,
     handleViewRender,
     getContainerPostion,
+    getCurrentIndex,
+    setCurrentIndex,
   };
 }

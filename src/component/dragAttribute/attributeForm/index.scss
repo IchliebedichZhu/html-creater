@@ -2,11 +2,13 @@
   .common_attr {
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
     &_label {
+      width: 40%;
       margin-right: 10px;
     }
     input {
-      width: 300px;
+      width: 60%;
     }
   }
 }

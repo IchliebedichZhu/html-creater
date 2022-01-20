@@ -23,16 +23,25 @@ type DragMenuListParam = {
   currentIndex?: number;
 };
 
+export type styleData = {
+  key: keyof React.CSSProperties;
+  value: string;
+  title: string;
+  type: 'input' | 'color' | 'swipe' | 'image' | 'precent';
+};
+
+export type DragMenuElementFunc = (
+  style: styleData[],
+  attributes?: Record<string, any>
+) => React.FunctionComponentElement<any>;
+
 /** 菜单栏列表数据 */
 export type DragMenuListData = {
   key: string;
   name: string;
   icon: string | ReactNode;
-  element: (
-    style: React.CSSProperties,
-    attributes?: Record<string, any>
-  ) => React.FunctionComponentElement<any>;
-  style?: React.CSSProperties;
+  element: DragMenuElementFunc;
+  style?: styleData[];
   position?: ViewListPositionData;
   attributes?: AttributeFormList[];
 };

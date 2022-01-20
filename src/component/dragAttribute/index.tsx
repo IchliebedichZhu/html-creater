@@ -1,28 +1,28 @@
-import AttributeForm, { AttributeFormList } from './attributeForm';
+import { styleData } from '../dragMenu';
+import AttributeForm, { AttributeFormList, changeFunc } from './attributeForm';
+import AttributeStyle, { handleStyleChangeFunc } from './attributeStyle';
 import './index.scss';
 
-type DragAttribute = {
+type DragAttributeParam = {
   title?: string;
-  attributeList?: string[];
+  attributeList?: AttributeFormList[];
+  handleChange?: changeFunc;
+  handleStyleChange?: handleStyleChangeFunc;
+  styleList?: styleData[];
 };
-
-const list: AttributeFormList[] = [
-  {
-    key: 'test',
-    label: 'test',
-    type: 'input',
-    extraData: {},
-  },
-];
 
 function DragAttribute({
   title = 'Attributes',
   attributeList = [],
-}: DragAttribute) {
+  styleList = [],
+  handleStyleChange = () => {},
+  handleChange,
+}: DragAttributeParam) {
   return (
     <section className='drag_attributes'>
       <h3 className='drag_attributes_title'>{title}</h3>
-      <AttributeForm list={list} />
+      <AttributeForm list={attributeList} handleChange={handleChange} />
+      <AttributeStyle styleList={styleList} handleChange={handleStyleChange} />
     </section>
   );
 }

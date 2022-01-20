@@ -1,5 +1,6 @@
 import { DragMenuListData } from '@/component/dragMenu';
 import { ViewListPositionData } from '@/component/dragView/view';
+import { getStyleByData } from '@/utils';
 import ReactDOM from 'react-dom';
 
 export const MOVE_CHILD_ID = 'move_child';
@@ -28,7 +29,7 @@ export function handleMenuClick(
     node.style.display = 'block';
 
     node.style.transform = `translate3d(${e.pageX}px, ${e.pageY}px, 0)`;
-    ReactDOM.render(item.element(item.style || {}), node);
+    ReactDOM.render(item.element(item.style || []), node);
   }
 }
 

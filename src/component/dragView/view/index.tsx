@@ -1,5 +1,6 @@
+import { AttributeFormList } from '@/component/dragAttribute/attributeForm';
 import { DragMenuListData } from '@/component/dragMenu';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import './index.scss';
 
 type ScreenViewParam = {
@@ -7,7 +8,9 @@ type ScreenViewParam = {
   width?: number;
   height?: number;
   viewList?: DragMenuListData[];
+  focusIndex?: number;
   handleClick?: handleViewItemFunc;
+  handleClickScreen?: () => void;
   handleGetList?: (data: ViewListPositionData[]) => void;
 };
 
@@ -24,16 +27,29 @@ export type handleViewItemFunc = (
   index: number
 ) => void;
 
+/** 解析属性 */
+function explainAttribute(
+  attrList: AttributeFormList[] = []
+): Record<string, any> {
+  let obj: Record<string, any> = {};
+  attrList.forEach((val) => {
+    obj[val.key] = val.value;
+  });
+  return obj;
+}
+
 function ScreenView({
   containerId,
   width = 375,
   height = 667,
   viewList,
+  focusIndex = -1,
   handleClick = () => {},
+  handleClickScreen = () => {},
   handleGetList = () => {},
 }: ScreenViewParam) {
-  const [isDrag, setIsDrag] = useState(false);
   useEffect(() => {
+    // viewList改变渲染完成后重新获取元素的位置，并触发回调
     const positionArr: ViewListPositionData[] = [];
     const parent = document.querySelector(`#${containerId}`);
     if (parent && parent.childNodes && parent.childNodes.length > 0) {
@@ -51,22 +67,21 @@ function ScreenView({
       id={containerId}
       className='screen_view'
       style={{ width, height }}
-      onClick={(e) => {}}
+      onClick={handleClickScreen}
     >
       {viewList?.map((val, index) => (
         <div
+          className={focusIndex === index ? 'screen_view_focus' : ''}
           key={`${val.key}_${index}`}
           onMouseDown={(e) => {
             e.preventDefault();
-            setIsDrag(true);
             handleClick(e, val, index);
           }}
           onMouseUp={(e) => {
             e.preventDefault();
-            setIsDrag(false);
           }}
         >
-          {val.element(val.style || {})}
+          {val.element(val.style || [], explainAttribute(val.attributes))}
         </div>
       ))}
     </section>

@@ -1,3 +1,6 @@
+import { styleData } from '@/component/dragMenu';
+import React from 'react';
+
 /** 深拷贝 */
 export function deepClone<T extends Record<string, any>>(obj: T): T {
   let newObj: any = Array.isArray(obj) ? [] : {};
@@ -11,4 +14,17 @@ export function deepClone<T extends Record<string, any>>(obj: T): T {
     }
   }
   return newObj;
+}
+
+/** 样式列表转换成样式对象 */
+export function getStyleByData(
+  styleList: styleData[] = []
+): React.CSSProperties {
+  let cssObj: React.CSSProperties = {};
+
+  styleList.forEach((val) => {
+    (cssObj[val.key] as Record<string, any>) = val.value as any;
+  });
+
+  return cssObj;
 }
