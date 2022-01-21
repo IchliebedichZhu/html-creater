@@ -2,42 +2,29 @@ import { AttributeFormList } from '@/component/dragAttribute/attributeForm';
 import { DragMenuListData, styleData } from '@/component/dragMenu';
 import { getStyleByData, getStyleByKey } from '@/utils';
 
-const inputAttribute: AttributeFormList[] = [
+const textAttribute: AttributeFormList[] = [
   {
     key: 'text',
     type: 'input',
-    label: 'label',
-    value: '',
-    extraData: {},
-  },
-  {
-    key: 'placeholder',
-    type: 'input',
-    label: 'placeholder',
-    value: '',
+    label: '文本',
+    value: 'text',
     extraData: {},
   },
 ];
 
-const inputElement: (
+const textElement: (
   style: styleData[],
   attributes?: Record<string, any> | undefined
 ) => React.FunctionComponentElement<any> = (style, attributes) => (
   <>
-    <label style={getStyleByKey(['fontSize'], style)}>
-      {attributes && attributes.text}
-    </label>
-    <input
-      placeholder={attributes && attributes.placeholder}
-      style={getStyleByData(style)}
-    ></input>
+    <p style={getStyleByData(style)}>{attributes && attributes.text}</p>
   </>
 );
 
-export const inputData: DragMenuListData = {
-  key: 'input',
-  name: '输入框',
-  icon: 'input',
+export const textData: DragMenuListData = {
+  key: 'text',
+  name: '文本',
+  icon: 'text',
   style: [
     {
       key: 'width',
@@ -51,7 +38,13 @@ export const inputData: DragMenuListData = {
       type: 'input',
       title: '高度',
     },
+    {
+      key: 'background',
+      value: '#fff',
+      type: 'color',
+      title: '背景色',
+    },
   ],
-  attributes: inputAttribute,
-  element: inputElement,
+  attributes: textAttribute,
+  element: textElement,
 };

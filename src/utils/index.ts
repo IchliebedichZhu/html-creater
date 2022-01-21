@@ -28,3 +28,19 @@ export function getStyleByData(
 
   return cssObj;
 }
+
+/** 根据key获取style值 */
+export function getStyleByKey(
+  keys: (keyof React.CSSProperties)[],
+  styleList: styleData[]
+) {
+  let obj: React.CSSProperties = {};
+  keys.forEach((val) => {
+    let index = styleList.findIndex((item) => item.key === val);
+    if (index !== -1) {
+      // @ts-ignore
+      obj[val] = styleList[index].value;
+    }
+  });
+  return obj;
+}

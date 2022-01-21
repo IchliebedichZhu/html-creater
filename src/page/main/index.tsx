@@ -95,6 +95,7 @@ function Main() {
               if (isFocus) {
                 setIndex(-1);
                 setCurrentIndex(-1);
+                setCurrentElement(undefined);
                 isFocus = false;
               }
             }}
@@ -105,9 +106,15 @@ function Main() {
             title='属性'
             attributeList={currentElement?.attributes}
             styleList={currentElement?.style}
-            handleChange={(item, value, index) => {
+            handleChange={(_, value, index) => {
               if (currentElement && currentElement.attributes) {
                 currentElement.attributes[index].value = value;
+                setCurrentElement({ ...currentElement });
+              }
+            }}
+            handleStyleChange={(_, value, index) => {
+              if (currentElement && currentElement.style) {
+                currentElement.style[index].value = value;
                 setCurrentElement({ ...currentElement });
               }
             }}

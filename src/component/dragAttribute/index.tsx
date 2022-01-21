@@ -1,7 +1,11 @@
+import { Collapse } from 'antd';
+import { useState } from 'react';
 import { styleData } from '../dragMenu';
 import AttributeForm, { AttributeFormList, changeFunc } from './attributeForm';
 import AttributeStyle, { handleStyleChangeFunc } from './attributeStyle';
 import './index.scss';
+
+const { Panel } = Collapse;
 
 type DragAttributeParam = {
   title?: string;
@@ -12,17 +16,33 @@ type DragAttributeParam = {
 };
 
 function DragAttribute({
-  title = 'Attributes',
   attributeList = [],
   styleList = [],
   handleStyleChange = () => {},
   handleChange,
 }: DragAttributeParam) {
+  const [currentIndex, setCurrentIndex] = useState<string | string[]>(
+    'attribute'
+  );
   return (
     <section className='drag_attributes'>
-      <h3 className='drag_attributes_title'>{title}</h3>
-      <AttributeForm list={attributeList} handleChange={handleChange} />
-      <AttributeStyle styleList={styleList} handleChange={handleStyleChange} />
+      <Collapse
+        defaultActiveKey={currentIndex}
+        ghost
+        onChange={(key) => {
+          setCurrentIndex(key);
+        }}
+      >
+        <Panel header='属性' key='attribute'>
+          <AttributeForm list={attributeList} handleChange={handleChange} />
+        </Panel>
+        <Panel header='样式' key='style'>
+          <AttributeStyle
+            styleList={styleList}
+            handleChange={handleStyleChange}
+          />
+        </Panel>
+      </Collapse>
     </section>
   );
 }

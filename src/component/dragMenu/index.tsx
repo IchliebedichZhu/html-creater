@@ -25,7 +25,7 @@ type DragMenuListParam = {
 
 export type styleData = {
   key: keyof React.CSSProperties;
-  value: string;
+  value: string | number;
   title: string;
   type: 'input' | 'color' | 'swipe' | 'image' | 'precent';
 };
