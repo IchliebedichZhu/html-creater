@@ -81,7 +81,11 @@ function ScreenView({
             e.preventDefault();
           }}
         >
-          {val.element(val.style || [], explainAttribute(val.attributes))}
+          {val.element(
+            val.style || [],
+            explainAttribute(val.attributes),
+            val.customStyle
+          )}
         </div>
       ))}
     </section>

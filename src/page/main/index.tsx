@@ -106,15 +106,34 @@ function Main() {
             title='属性'
             attributeList={currentElement?.attributes}
             styleList={currentElement?.style}
-            handleChange={(_, value, index) => {
+            customStyle={currentElement?.customStyle}
+            handleChange={(item, value, index) => {
               if (currentElement && currentElement.attributes) {
-                currentElement.attributes[index].value = value;
+                if (item.type === 'image') {
+                  const fileReader = new FileReader();
+                  fileReader.readAsDataURL(value);
+                  fileReader.onload = (e) => {
+                    if (e.currentTarget && currentElement.attributes) {
+                      currentElement.attributes[index].value = (
+                        e.currentTarget as Record<string, any>
+                      ).result;
+                    }
+                  };
+                } else {
+                  currentElement.attributes[index].value = value;
+                }
                 setCurrentElement({ ...currentElement });
               }
             }}
             handleStyleChange={(_, value, index) => {
               if (currentElement && currentElement.style) {
                 currentElement.style[index].value = value;
+                setCurrentElement({ ...currentElement });
+              }
+            }}
+            customStyleChange={(list) => {
+              if (currentElement) {
+                currentElement.customStyle = list;
                 setCurrentElement({ ...currentElement });
               }
             }}

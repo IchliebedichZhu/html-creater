@@ -1,3 +1,4 @@
+import { customStyleData } from '@/component/dragAttribute/attributeStyle';
 import { styleData } from '@/component/dragMenu';
 import React from 'react';
 
@@ -42,5 +43,16 @@ export function getStyleByKey(
       obj[val] = styleList[index].value;
     }
   });
+  return obj;
+}
+
+/** 根据自定义样式列表获取style值 */
+export function getStyleByCustomStyle(list: customStyleData[] = []) {
+  const obj: Record<string, any> = {};
+
+  list.forEach((val) => {
+    obj[val.key] = val.value;
+  });
+
   return obj;
 }

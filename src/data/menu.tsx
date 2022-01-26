@@ -3,8 +3,14 @@ import { TabListData, viewContainerId } from '@/component/dragView';
 import { inputData } from './inputElem';
 import { textData } from './textElem';
 import { selectData } from './selector';
+import { imageData } from './imageElem';
 
-export const MENU_LIST: DragMenuListData[] = [inputData, textData, selectData];
+export const MENU_LIST: DragMenuListData[] = [
+  inputData,
+  textData,
+  selectData,
+  imageData,
+];
 
 /** 视图层菜单 */
 export const VIEW_MENU_TAB_LIST: TabListData[] = [

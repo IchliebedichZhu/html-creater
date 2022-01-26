@@ -1,6 +1,7 @@
 import { styleData } from '@/component/dragMenu';
-import { Card, Input } from 'antd';
-import React, { ReactElement } from 'react';
+import { Button, Card, Input } from 'antd';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
 import './index.scss';
 
 export type handleStyleChangeFunc = (
@@ -8,6 +9,13 @@ export type handleStyleChangeFunc = (
   value: string | number,
   index: number
 ) => void;
+
+export type customStyleChangeFunc = (item: customStyleData[]) => void;
+
+export type customStyleData = {
+  key: string;
+  value: string;
+};
 
 type StyleComponent = {
   data: styleData;
@@ -17,7 +25,9 @@ type StyleComponent = {
 
 type AttributeStyleParam = {
   styleList: styleData[];
+  customList: customStyleData[];
   handleChange?: handleStyleChangeFunc;
+  customStyleChange?: customStyleChangeFunc;
 };
 
 function CommonStyleComponent(
@@ -58,9 +68,64 @@ function StyleComponent({ data, index, handleChange }: StyleComponent) {
   }
 }
 
+/** 自定义样式 */
+function CustomStyle({
+  customStyle = [],
+  handleChange = () => {},
+}: {
+  customStyle: customStyleData[];
+  handleChange?: customStyleChangeFunc;
+}) {
+  const [customList, setCustomList] = useState<customStyleData[]>(customStyle);
+  useEffect(() => {
+    setCustomList(customStyle);
+  }, [customStyle]);
+  return (
+    <>
+      {customList.map((val, index) => (
+        <div className='custom_style' key={`custom_style_${index}`}>
+          <Input
+            className='custom_style_key'
+            placeholder='样式名'
+            value={val.key}
+            onChange={(e) => {
+              val.key = e.target.value;
+              setCustomList([...customList]);
+              handleChange(customList);
+            }}
+          />
+          <Input
+            className='custom_style_value'
+            placeholder='样式值'
+            value={val.value}
+            onChange={(e) => {
+              val.value = e.target.value;
+              setCustomList([...customList]);
+              handleChange(customList);
+            }}
+          />
+        </div>
+      ))}
+      <Button
+        className='custom_style_add_btn'
+        type='primary'
+        onClick={() => {
+          customList.push({ key: '', value: '' });
+          setCustomList([...customList]);
+          handleChange(customList);
+        }}
+      >
+        <PlusOutlined style={{ color: '#fff' }} />
+      </Button>
+    </>
+  );
+}
+
 function AttributeForm({
   styleList,
+  customList,
   handleChange = () => {},
+  customStyleChange = () => {},
 }: AttributeStyleParam) {
   return (
     <div className='attr_form_main'>
@@ -72,6 +137,7 @@ function AttributeForm({
           key={val.key + '_' + index}
         />
       ))}
+      <CustomStyle customStyle={customList} handleChange={customStyleChange} />
     </div>
   );
 }

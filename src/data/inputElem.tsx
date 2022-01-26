@@ -1,6 +1,8 @@
 import { AttributeFormList } from '@/component/dragAttribute/attributeForm';
+import { customStyleData } from '@/component/dragAttribute/attributeStyle';
 import { DragMenuListData, styleData } from '@/component/dragMenu';
-import { getStyleByData, getStyleByKey } from '@/utils';
+import { getStyleByData, getStyleByKey, getStyleByCustomStyle } from '@/utils';
+import { elementFunc } from './commonType';
 
 const inputAttribute: AttributeFormList[] = [
   {
@@ -19,17 +21,17 @@ const inputAttribute: AttributeFormList[] = [
   },
 ];
 
-const inputElement: (
-  style: styleData[],
-  attributes?: Record<string, any> | undefined
-) => React.FunctionComponentElement<any> = (style, attributes) => (
+const inputElement: elementFunc = (style, attributes, customStyle) => (
   <>
     <label style={getStyleByKey(['fontSize'], style)}>
       {attributes && attributes.text}
     </label>
     <input
       placeholder={attributes && attributes.placeholder}
-      style={getStyleByData(style)}
+      style={Object.assign(
+        getStyleByData(style),
+        getStyleByCustomStyle(customStyle)
+      )}
     ></input>
   </>
 );

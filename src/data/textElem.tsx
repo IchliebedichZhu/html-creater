@@ -1,6 +1,7 @@
 import { AttributeFormList } from '@/component/dragAttribute/attributeForm';
 import { DragMenuListData, styleData } from '@/component/dragMenu';
-import { getStyleByData, getStyleByKey } from '@/utils';
+import { getStyleByCustomStyle, getStyleByData, getStyleByKey } from '@/utils';
+import { elementFunc } from './commonType';
 
 const textAttribute: AttributeFormList[] = [
   {
@@ -12,12 +13,16 @@ const textAttribute: AttributeFormList[] = [
   },
 ];
 
-const textElement: (
-  style: styleData[],
-  attributes?: Record<string, any> | undefined
-) => React.FunctionComponentElement<any> = (style, attributes) => (
+const textElement: elementFunc = (style, attributes, customStyle) => (
   <>
-    <p style={getStyleByData(style)}>{attributes && attributes.text}</p>
+    <p
+      style={Object.assign(
+        getStyleByData(style),
+        getStyleByCustomStyle(customStyle)
+      )}
+    >
+      {attributes && attributes.text}
+    </p>
   </>
 );
 

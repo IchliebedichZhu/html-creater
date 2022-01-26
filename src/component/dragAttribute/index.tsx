@@ -2,7 +2,11 @@ import { Collapse } from 'antd';
 import { useState } from 'react';
 import { styleData } from '../dragMenu';
 import AttributeForm, { AttributeFormList, changeFunc } from './attributeForm';
-import AttributeStyle, { handleStyleChangeFunc } from './attributeStyle';
+import AttributeStyle, {
+  customStyleChangeFunc,
+  customStyleData,
+  handleStyleChangeFunc,
+} from './attributeStyle';
 import './index.scss';
 
 const { Panel } = Collapse;
@@ -12,14 +16,19 @@ type DragAttributeParam = {
   attributeList?: AttributeFormList[];
   handleChange?: changeFunc;
   handleStyleChange?: handleStyleChangeFunc;
+  customStyleChange?: customStyleChangeFunc;
   styleList?: styleData[];
+  customStyle?: customStyleData[];
 };
 
+/** 渲染主函数 */
 function DragAttribute({
   attributeList = [],
   styleList = [],
   handleStyleChange = () => {},
+  customStyleChange = () => {},
   handleChange,
+  customStyle = [],
 }: DragAttributeParam) {
   const [currentIndex, setCurrentIndex] = useState<string | string[]>(
     'attribute'
@@ -39,7 +48,9 @@ function DragAttribute({
         <Panel header='样式' key='style'>
           <AttributeStyle
             styleList={styleList}
+            customList={customStyle}
             handleChange={handleStyleChange}
+            customStyleChange={customStyleChange}
           />
         </Panel>
       </Collapse>

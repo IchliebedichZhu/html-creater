@@ -3,6 +3,7 @@ import Icon from '@/component/icon';
 import './index.scss';
 import { ViewListPositionData } from '../dragView/view';
 import { AttributeFormList } from '../dragAttribute/attributeForm';
+import { customStyleData } from '../dragAttribute/attributeStyle';
 
 type MenuClickFunc = (
   event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -32,7 +33,8 @@ export type styleData = {
 
 export type DragMenuElementFunc = (
   style: styleData[],
-  attributes?: Record<string, any>
+  attributes?: Record<string, any>,
+  customStyle?: customStyleData[]
 ) => React.FunctionComponentElement<any>;
 
 /** 菜单栏列表数据 */
@@ -42,6 +44,7 @@ export type DragMenuListData = {
   icon: string | ReactNode;
   element: DragMenuElementFunc;
   style?: styleData[];
+  customStyle?: customStyleData[];
   position?: ViewListPositionData;
   attributes?: AttributeFormList[];
 };

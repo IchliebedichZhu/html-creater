@@ -1,12 +1,13 @@
 import { styleData } from '@/component/dragMenu';
-import { Input } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Image, Input, Upload } from 'antd';
 import './index.scss';
 
-type TypeKey = 'input';
+type TypeKey = 'input' | 'image';
 
 export type changeFunc = (
   item: AttributeFormList,
-  value: string,
+  value: any,
   index: number
 ) => void;
 
@@ -47,7 +48,27 @@ function HandleComponent({
           />
         </div>
       );
-
+    case 'image':
+      return (
+        <div className='common_attr'>
+          <label className='common_attr_label'>{item.label}</label>
+          <Upload
+            onChange={(e) =>
+              handleChange(item, e.file.originFileObj || '', index)
+            }
+            action=''
+          >
+            {!item.value ? (
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            ) : (
+              <Image src={item.value} preview={false} />
+            )}
+          </Upload>
+        </div>
+      );
     default:
       return null;
   }
