@@ -53,7 +53,7 @@ function Main() {
   return (
     <MainTemplate>
       <Row className='main_row'>
-        <Col span={6}>
+        <Col span={5}>
           <DragMenu
             title='组件'
             list={MENU_LIST}
@@ -64,7 +64,7 @@ function Main() {
             }}
           />
         </Col>
-        <Col className='draw_view_main' span={12}>
+        <Col className='draw_view_main' span={14}>
           <DragView
             tabMenu={VIEW_MENU_TAB_LIST}
             viewList={viewList}
@@ -101,7 +101,7 @@ function Main() {
             }}
           />
         </Col>
-        <Col span={6}>
+        <Col span={5}>
           <DragAttribute
             title='属性'
             attributeList={currentElement?.attributes}
