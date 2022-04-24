@@ -1,6 +1,8 @@
 import { styleData } from '@/component/dragMenu';
 import { PlusOutlined } from '@ant-design/icons';
 import { Image, Input, Upload } from 'antd';
+import AttributeFormInput from './formInput';
+import AttributeFormUpload from './formUpload';
 import './index.scss';
 
 type TypeKey = 'input' | 'image';
@@ -39,35 +41,15 @@ function HandleComponent({
   switch (item.type) {
     case 'input':
       return (
-        <div className='common_attr'>
-          <label className='common_attr_label'>{item.label}</label>
-          <Input
-            placeholder={item.extraData.placeholder}
-            onChange={(e) => handleChange(item, e.target.value, index)}
-            value={item.value}
-          />
-        </div>
+        <AttributeFormInput item={item} index={index} onChange={handleChange} />
       );
     case 'image':
       return (
-        <div className='common_attr'>
-          <label className='common_attr_label'>{item.label}</label>
-          <Upload
-            onChange={(e) =>
-              handleChange(item, e.file.originFileObj || '', index)
-            }
-            action=''
-          >
-            {!item.value ? (
-              <div>
-                <PlusOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </div>
-            ) : (
-              <Image src={item.value} preview={false} />
-            )}
-          </Upload>
-        </div>
+        <AttributeFormUpload
+          item={item}
+          index={index}
+          onChange={handleChange}
+        />
       );
     default:
       return null;

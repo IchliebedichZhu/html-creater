@@ -4,6 +4,9 @@ import './index.scss';
 import { ViewListPositionData } from '../dragView/view';
 import { AttributeFormList } from '../dragAttribute/attributeForm';
 import { customStyleData } from '../dragAttribute/attributeStyle';
+import { Collapse } from 'antd';
+
+const Panel = Collapse.Panel;
 
 type MenuClickFunc = (
   event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -11,9 +14,14 @@ type MenuClickFunc = (
   index: number
 ) => void;
 
-type DragMenuParam = {
-  title?: string;
+export type DragMenuPanelData = {
+  key: string;
+  title: string;
   list: DragMenuListData[];
+};
+
+type DragMenuParam = {
+  list: DragMenuPanelData[];
   handleClick?: MenuClickFunc;
   currentIndex?: number;
 };
@@ -74,22 +82,26 @@ function MenuList({ list, handleClick, currentIndex }: DragMenuListParam) {
 
 /** 菜单栏 */
 function DragMenu({
-  title = 'Menu List',
   list,
   handleClick = () => {},
   currentIndex = -1,
 }: DragMenuParam) {
   return (
-    <section className='drag_menu'>
-      <h3 className='drag_menu_title'>{title}</h3>
-      <div className='drag_menu_list'>
-        <MenuList
-          list={list}
-          handleClick={handleClick}
-          currentIndex={currentIndex}
-        />
-      </div>
-    </section>
+    <Collapse defaultActiveKey={[list.length ? list[0].key : '']} ghost>
+      {list.map((item) => (
+        <Panel key={item.key} header={item.title}>
+          <section className='drag_menu'>
+            <div className='drag_menu_list'>
+              <MenuList
+                list={item.list}
+                handleClick={handleClick}
+                currentIndex={currentIndex}
+              />
+            </div>
+          </section>
+        </Panel>
+      ))}
+    </Collapse>
   );
 }
 

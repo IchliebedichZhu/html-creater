@@ -1,4 +1,4 @@
-import { Collapse } from 'antd';
+import { Card, Collapse } from 'antd';
 import { useState } from 'react';
 import { styleData } from '../dragMenu';
 import AttributeForm, { AttributeFormList, changeFunc } from './attributeForm';
@@ -21,8 +21,9 @@ type DragAttributeParam = {
   customStyle?: customStyleData[];
 };
 
-/** 渲染主函数 */
+/** 属性配置 */
 function DragAttribute({
+  title = '',
   attributeList = [],
   styleList = [],
   handleStyleChange = () => {},
@@ -35,6 +36,7 @@ function DragAttribute({
   );
   return (
     <section className='drag_attributes'>
+      <h3>{title}</h3>
       <Collapse
         defaultActiveKey={currentIndex}
         ghost
@@ -42,17 +44,22 @@ function DragAttribute({
           setCurrentIndex(key);
         }}
       >
-        <Panel header='属性' key='attribute'>
-          <AttributeForm list={attributeList} handleChange={handleChange} />
-        </Panel>
-        <Panel header='样式' key='style'>
-          <AttributeStyle
-            styleList={styleList}
-            customList={customStyle}
-            handleChange={handleStyleChange}
-            customStyleChange={customStyleChange}
-          />
-        </Panel>
+        {attributeList.length ? (
+          <Panel header='属性' key='attribute'>
+            <AttributeForm list={attributeList} handleChange={handleChange} />
+          </Panel>
+        ) : null}
+
+        {styleList.length ? (
+          <Panel header='样式' key='style'>
+            <AttributeStyle
+              styleList={styleList}
+              customList={customStyle}
+              handleChange={handleStyleChange}
+              customStyleChange={customStyleChange}
+            />
+          </Panel>
+        ) : null}
       </Collapse>
     </section>
   );

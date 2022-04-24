@@ -1,7 +1,7 @@
 import MainTemplate from '@/template/mainTemplate';
 import DragMenu, { DragMenuListData } from '@/component/dragMenu';
 import DragAttribute from '@/component/dragAttribute';
-import { Col, Row } from 'antd';
+import { Col, Collapse, Row } from 'antd';
 import './index.scss';
 import DragView from '@/component/dragView';
 import { useEffect, useState } from 'react';
@@ -14,6 +14,7 @@ import {
 import { useMouseMove, useMouseUp } from '@/hooks/mouseEvent';
 import { MENU_LIST, VIEW_MENU_TAB_LIST } from '@/data/menu';
 import { useDragMethod } from '@/hooks/drag';
+const Panel = Collapse.Panel;
 
 let timer: NodeJS.Timer;
 /** 是否正在拖动 */
@@ -55,7 +56,6 @@ function Main() {
       <Row className='main_row'>
         <Col span={5}>
           <DragMenu
-            title='组件'
             list={MENU_LIST}
             handleClick={(e, item) => {
               isDrag = true;

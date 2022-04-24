@@ -9,7 +9,7 @@ const imageAttribute: AttributeFormList[] = [
     key: 'src',
     type: 'image',
     label: 'image',
-    value: '',
+    value: 'https://img.yzmblog.top/01.jpeg',
     extraData: {},
   },
 ];
