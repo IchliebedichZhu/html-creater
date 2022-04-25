@@ -49,6 +49,12 @@ export const textData: DragMenuListData = {
       type: 'color',
       title: '背景色',
     },
+    {
+      key: 'fontSize',
+      value: '#000',
+      type: 'color',
+      title: '字体颜色',
+    },
   ],
   attributes: textAttribute,
   element: textElement,

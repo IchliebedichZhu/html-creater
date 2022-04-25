@@ -2,8 +2,10 @@ import { AttributeFormList } from '@/component/dragAttribute/attributeForm';
 import { DragMenuListData } from '@/component/dragMenu';
 import { useEffect } from 'react';
 import './index.scss';
+import ViewColumn from './viewColumn';
 
 type ScreenViewParam = {
+  isPreview: boolean;
   containerId: string;
   width?: number;
   height?: number;
@@ -27,18 +29,8 @@ export type handleViewItemFunc = (
   index: number
 ) => void;
 
-/** 解析属性 */
-function explainAttribute(
-  attrList: AttributeFormList[] = []
-): Record<string, any> {
-  let obj: Record<string, any> = {};
-  attrList.forEach((val) => {
-    obj[val.key] = val.value;
-  });
-  return obj;
-}
-
 function ScreenView({
+  isPreview = false,
   containerId,
   width = 375,
   height = 667,
@@ -70,23 +62,14 @@ function ScreenView({
       onClick={handleClickScreen}
     >
       {viewList?.map((val, index) => (
-        <div
-          className={focusIndex === index ? 'screen_view_focus' : ''}
+        <ViewColumn
+          isPreView={isPreview}
+          focusIndex={focusIndex}
+          index={index}
+          val={val}
+          handleClick={handleClick}
           key={`${val.key}_${index}`}
-          onMouseDown={(e) => {
-            e.preventDefault();
-            handleClick(e, val, index);
-          }}
-          onMouseUp={(e) => {
-            e.preventDefault();
-          }}
-        >
-          {val.element(
-            val.style || [],
-            explainAttribute(val.attributes),
-            val.customStyle
-          )}
-        </div>
+        />
       ))}
     </section>
   );

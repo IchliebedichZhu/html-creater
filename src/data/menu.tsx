@@ -16,11 +16,6 @@ export const MENU_LIST: DragMenuPanelData[] = [
     title: '表单',
     list: [inputData, selectData],
   },
-  {
-    key: 'active_menu',
-    title: '交互',
-    list: [],
-  },
 ];
 
 /** 视图层菜单 */

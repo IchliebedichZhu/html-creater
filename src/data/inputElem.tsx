@@ -53,6 +53,18 @@ export const inputData: DragMenuListData = {
       type: 'input',
       title: '高度',
     },
+    {
+      key: 'fontSize',
+      value: '#000',
+      type: 'color',
+      title: '文字颜色',
+    },
+    {
+      key: 'background',
+      value: '#000',
+      type: 'color',
+      title: '背景色',
+    },
   ],
   attributes: inputAttribute,
   element: inputElement,

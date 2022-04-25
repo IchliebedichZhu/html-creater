@@ -1,3 +1,4 @@
+import { AttributeFormList } from '@/component/dragAttribute/attributeForm';
 import { customStyleData } from '@/component/dragAttribute/attributeStyle';
 import { styleData } from '@/component/dragMenu';
 import React from 'react';
@@ -55,4 +56,17 @@ export function getStyleByCustomStyle(list: customStyleData[] = []) {
   });
 
   return obj;
+}
+
+/** 将属性数组转为对象 */
+export function getAttributesToRecord(
+  arr: AttributeFormList[]
+): Record<string, any> {
+  let res: Record<string, any> = {};
+
+  arr.forEach((val) => {
+    res[val.key] = val.value;
+  });
+
+  return res;
 }

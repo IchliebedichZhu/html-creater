@@ -5,7 +5,7 @@ import AttributeFormInput from './formInput';
 import AttributeFormUpload from './formUpload';
 import './index.scss';
 
-type TypeKey = 'input' | 'image';
+type TypeKey = 'input' | 'image' | 'range';
 
 export type changeFunc = (
   item: AttributeFormList,

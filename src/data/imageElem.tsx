@@ -31,13 +31,13 @@ export const imageData: DragMenuListData = {
   style: [
     {
       key: 'width',
-      value: '200px',
+      value: '100%',
       type: 'input',
       title: '宽度',
     },
     {
       key: 'height',
-      value: '100px',
+      value: '200px',
       type: 'input',
       title: '高度',
     },

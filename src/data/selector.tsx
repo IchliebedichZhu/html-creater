@@ -11,6 +11,13 @@ const selectAttribute: AttributeFormList[] = [
     value: 'text',
     extraData: {},
   },
+  {
+    key: 'range',
+    type: 'range',
+    label: '',
+    value: 0,
+    extraData: {},
+  },
 ];
 
 const selectElement: elementFunc = (style, attributes, customStyle) => (

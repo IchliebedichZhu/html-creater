@@ -49,12 +49,23 @@ function HandleTabComponent({
       return (
         <div className='screen_view_container'>
           <ScreenView
+            isPreview={false}
             containerId={item.key}
             viewList={viewList}
             focusIndex={focusIndex}
             handleClick={handleClick}
             handleGetList={handleViewChange}
             handleClickScreen={handleClickScreen}
+          />
+        </div>
+      );
+    case 'preview':
+      return (
+        <div className='screen_view_container'>
+          <ScreenView
+            isPreview={false}
+            containerId={item.key}
+            viewList={viewList}
           />
         </div>
       );
