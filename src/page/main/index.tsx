@@ -35,7 +35,12 @@ let isFocus = false;
 function Main() {
   const [viewList, setViewList] = useState<DragMenuListData[]>([]);
   const [currentElement, setCurrentElement] = useState<DragMenuListData>();
-  const [_, setIndex] = useState(-1);
+  const [currentIndex, setIndex] = useState(-1);
+  useEffect(() => {
+    if (viewList[currentIndex]) {
+      setCurrentElement(viewList[currentIndex]);
+    }
+  }, [currentIndex]);
   const {
     handleDragMove,
     handleDragUp,
@@ -52,7 +57,10 @@ function Main() {
       // 获取当前鼠标移动到的位置
       const insertIndex = handleMouseMove(e, getContainerPostion());
       const containViewList = handleDragMove(e, insertIndex);
-      if (containViewList) setViewList([...containViewList]);
+
+      if (containViewList) {
+        setViewList([...containViewList]);
+      }
     });
     useMouseUp(() => {
       clearTimeout(timer);
@@ -113,7 +121,6 @@ function Main() {
       isDrag = true;
       handleMenuClick(e, item);
       handleViewClick(item, -1, true);
-      setCurrentElement(item);
     },
     []
   );
